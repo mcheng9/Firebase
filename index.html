@@ -20,13 +20,21 @@
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    //import { initializeApp2 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     //import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    //import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    
+    //Additional Import Code for Project 2
+    import { getDatabase, ref, set, onValue} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    //import { getDatabase2, ref2, set2, onValue2} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    
+  
     const firebaseConfig = {
       apiKey: "AIzaSyBkheQNeAPybR1mIlcfLzW6kVpsxzOP47Y",
       authDomain: "mfaworkshopfirebase.firebaseapp.com",
@@ -41,6 +49,7 @@
     const app = initializeApp(firebaseConfig);
     //const analytics = getAnalytics(app);
     const db = getDatabase(app);
+    
 
     const Name = document.querySelector("#name") 
     const Email = document.querySelector("#email")
@@ -48,9 +57,10 @@
 
     document.querySelector('#submit').addEventListener('click', Submit)   
  
-    function Submit() {
-       const timestamp = buildTimestamp()
- 
+    function Submit() { 
+       //const timestamp = buildTimestamp()
+       const timestamp = "project1/" + buildTimestamp()
+
        set(ref(db, timestamp), {
        Name: Name.value,
        email: Email.value,
@@ -97,6 +107,43 @@
       }
       return units
     }
+
+    //Second Firebase for Second Project
+    // Your web app's Firebase configuration
+    /*
+    const firebaseConfig2 = {
+      apiKey: "AIzaSyClYM9yMo7FMc9GYPmsx44vC4h5t4PegJo",
+      authDomain: "mfaworkshopfirebase2.firebaseapp.com",
+      projectId: "mfaworkshopfirebase2",
+      storageBucket: "mfaworkshopfirebase2.firebasestorage.app",
+      messagingSenderId: "307160445579",
+      appId: "1:307160445579:web:780a8a37b98d53c36c1a8e"
+    };
+
+    // Initialize Firebase
+    const app2 = initializeApp(firebaseConfig2);
+    const db2 = getDatabase(app2);
+    */
+
+    const likeButtons = document.querySelectorAll('.likeButtons')
+    const numLikes = document.querySelectorAll('.numLikes')
+
+    for (let i=0; i < likeButtons.length; i++) {
+      likeButtons[i].addEventListener('click', function(){ Like(i) })
+
+      onValue(ref(db, "project2/article "+i+"/numLikes"), (snapshot) => {
+          let data = snapshot.val();
+          numLikes[i].innerHTML = data
+      });
+    }
+
+    function Like(i) {
+     const numberLikes = parseInt(numLikes[i].innerHTML) + 1
+     set(ref(db, "project2/article " + i), {
+        numLikes: numberLikes,
+     });
+    }
+
   </script>
 </head>
 
@@ -110,6 +157,20 @@
   <input type="email" id="email" placeholder="Your email">
   <input type="school" id="school" placeholder="Your school">
   <input type="submit" id="submit">
+
+  <hr>
+
+  <p>This is work for the second project</p>
+
+
+  <button class="likeButtons">Like</button>
+  <span class="numLikes">0</span>
+
+  <button class="likeButtons">Like</button>
+  <span class="numLikes">0</span>
+
+  <button class="likeButtons">Like</button>
+  <span class="numLikes">0</span>
 
 </body>
 
